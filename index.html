@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Swear Word Generator</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #111;
+      color: #FF4186;
+      text-align: center;
+      padding-top: 50px;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    button, input {
+      margin-top: 20px;
+      font-size: 1em;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+    }
+    button {
+      background-color: #41DDFF;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #FF4186;
+      color: white;
+    }
+    input[type="file"] {
+      background-color: #222;
+      color: #C3CBDE;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="swear">Upload your word list and click generate!</h1>
+
+  <div>
+    <label>Upload word list (1 word per line):</label><br>
+    <input type="file" id="wordFile"><br><br>
+
+    <button onclick="generateSwear()">Generate Swear</button>
+  </div>
+
+  <script>
+    let words = [];
+
+    document.getElementById("wordFile").addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        words = e.target.result
+          .split(/\r?\n/)
+          .map(w => w.trim())
+          .filter(Boolean);
+      };
+      reader.readAsText(file);
+    });
+
+    function generateSwear() {
+      if (words.length < 2) {
+        alert("Upload a word list with at least 2 words.");
+        return;
+      }
+
+      const word1 = words[Math.floor(Math.random() * words.length)];
+      const word2 = words[Math.floor(Math.random() * words.length)];
+      document.getElementById("swear").textContent = `${word1} ${word2}!`;
+    }
+  </script>
+</body>
+</html>
