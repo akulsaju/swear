@@ -29,42 +29,32 @@
       background-color: #FF4186;
       color: white;
     }
-    input[type="file"] {
-      background-color: #222;
-      color: #C3CBDE;
-    }
   </style>
 </head>
 <body>
-  <h1 id="swear">Upload your word list and click generate!</h1>
-
-  <div>
-    <label>Upload word list (1 word per line):</label><br>
-    <input type="file" id="wordFile"><br><br>
-
-    <button onclick="generateSwear()">Generate Swear</button>
-  </div>
+  <h1 id="swear">Loading words...</h1>
+  <button onclick="generateSwear()">Generate Swear</button>
 
   <script>
     let words = [];
 
-    document.getElementById("wordFile").addEventListener("change", function () {
-      const file = this.files[0];
-      if (!file) return;
+    // 🔗 Replace this with the RAW GitHub link to your words.txt
+    const wordListURL = 'https://github.com/akulsaju/swear/blob/f5641423bf9e13761c14027e6da2d37c03346120/words.txt';
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        words = e.target.result
-          .split(/\r?\n/)
-          .map(w => w.trim())
-          .filter(Boolean);
-      };
-      reader.readAsText(file);
-    });
+    fetch(wordListURL)
+      .then(response => response.text())
+      .then(text => {
+        words = text.split(/\r?\n/).map(w => w.trim()).filter(Boolean);
+        document.getElementById("swear").textContent = "Ready! Click Generate!";
+      })
+      .catch(err => {
+        document.getElementById("swear").textContent = "Failed to load words 😢";
+        console.error(err);
+      });
 
     function generateSwear() {
       if (words.length < 2) {
-        alert("Upload a word list with at least 2 words.");
+        alert("Word list is too short.");
         return;
       }
 
